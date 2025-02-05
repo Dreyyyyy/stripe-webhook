@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stripe Webhook Tester</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #635bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #4b45c6;
+        }
+    </style>
+</head>
+<body>
+    <h1>Stripe Webhook Tester</h1>
+    <button onclick="createPayment()">Create Payment</button>
+    <button onclick="attachPaymentMethod()">Attach Payment Method</button>
+
+    <div id="result"></div>
+
+    <script>
+        let stripe;
+        // Fetch the publishable key from the server
+        async function initialize() {
+            const response = await fetch('/config');
+            const { publishableKey } = await response.json();
+            stripe = Stripe(publishableKey);
+        }
+        // Initialize the Stripe instance
+        initialize();
+
+        async function createPayment() {
+            const response = await fetch('/create-payment', {
+                method: 'POST'
+            });
+            const data = await response.json();
+            document.getElementById('result').innerHTML = 'Payment Intent Created!';
+        }
+
+        async function attachPaymentMethod() {
+            const response = await fetch('/attach-payment-method', {
+                method: 'POST'
+            });
+            const data = await response.json();
+            document.getElementById('result').innerHTML = 'Payment Method Attached!';
+        }
+    </script>
+</body>
+</html>
